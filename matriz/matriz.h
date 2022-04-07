@@ -8,10 +8,7 @@ int acessa_matriz(Matriz * mat, int i, int j, float *v);
 int atribui_matriz(Matriz * mat, int i, int j, float v);
 int nlinhas(Matriz * mat);
 int ncolunas(Matriz * mat);
-
-
-
-
+Matriz* gerar_transposta(Matriz* mat);
 
 
 #endif

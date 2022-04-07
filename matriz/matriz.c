@@ -8,7 +8,7 @@
 struct matriz{
     int lin;
     int col;
-    float * v;
+    float ** v;
 };
 
 Matriz* cria_matriz(int nl, int nc){
@@ -19,50 +19,48 @@ Matriz* cria_matriz(int nl, int nc){
 
         mat->lin = nl;
         mat->col = nc;
-        mat->v = (float*) malloc(nl*nc*sizeof(float));
+        mat->v = (float**) malloc(nl*sizeof(float*));
+        if(mat->v){ 
 
-        if(!(mat->v)){
-          free(mat->v);
-          return NULL;
-        }
-
-        return mat;
+            for(int i = 0;i< nl;i++){
+                mat->v[i] == (float*)malloc(nc*sizeof(float));
+            
+                if (mat->v[i] == NULL){
+                    libera_matriz(mat);
+                    return NULL;
+                }
+            }
+            return mat;       
+        }    
     }
-
     return NULL;
 }
 
 void libera_matriz(Matriz * mat){
+    int i;
+    for (i=0; i<mat->lin; i++)
+        free(mat->v[i]);
+
     free(mat->v);
     free(mat);
 }
 
 int acessa_matriz(Matriz * mat, int i, int j, float * v){
-    int ind;
-
-    if(mat && i >= 0 && i < mat->lin && j >= 0 && j < mat->col){
-
-        ind = i*mat->col + j;
-
-        return mat->v[ind];
-
+    if (i<0 || i>=mat->lin || j<0 || j>=mat->col) {
+        
+        return 0;
     }
-
-    return 0;
+    return mat->v[i][j];
 }
 
 int atribui_matriz(Matriz * mat, int i, int j, float v) {
-    int ind;
+    if (i<0 || i>=mat->lin || j<0 || j>=mat->col) {
 
-    if(mat && i >= 0 && i < mat->lin && j >= 0 && j < mat->col){
-
-        ind = i*mat->col + j;
-
-        return mat->v[ind] = v;
-
+        return 0;
     }
 
-    return 0;
+    mat->v[i][j] = v;
+    return 1;
 }
 
 int nlinhas(Matriz * mat){
@@ -72,6 +70,21 @@ int nlinhas(Matriz * mat){
 int ncolunas(Matriz * mat){
     return mat->col;
 
+}
+
+Matriz* gerar_transposta(Matriz* matriz){
+    int ind;
+    Matriz* mat = cria_matriz(matriz->col,matriz->lin);
+    if(mat){
+        for(int i = 0;i < mat->lin;i++){
+            for(int j = 0;i < mat->col;i++){
+                mat->v[i][j] = matriz->v[j][i];
+            }
+
+        }
+        return mat;
+    }
+    return NULL;
 }
 
 
